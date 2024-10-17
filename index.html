@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symphonic Stories</title>
+    <link rel="icon" href="fav.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Section Spacing & Separator */
+        section {
+            padding: 80px 50px;
+            margin: 50px 0;
+        }
+
+        .section-divider {
+            height: 2px;
+            background-color: #333;
+            margin: 0 auto;
+            width: 80%;
+            margin-top: 50px;
+        }
+
+        /* Hero Section with Parallax Effect */
+        .hero {
+            background-image: url('bgimg.jpg'); /* Replace with your background image */
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            margin-top: 0%;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            color: #007aff;
+            animation: fadeInDown 2s ease;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            animation: fadeInUp 2.5s ease;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .hero-buttons a {
+            background-color: #007aff;
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-buttons a:hover {
+            background-color: #005bb5;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* About Section */
+        .about-section {
+            background-color: #121212;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .about-section h1 {
+            font-size: 3rem;
+            color: #007aff;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #cccccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: #1c1c1c;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            color: #007aff;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .features .feature-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .features .feature-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .features .feature-item i {
+            font-size: 3rem;
+            color: #007aff;
+            margin-right: 20px;
+        }
+
+        .features .feature-item h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .features .feature-item p {
+            font-size: 1.2rem;
+            color: #cccccc;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            background-color: #121212;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .testimonials h2 {
+            font-size: 2.5rem;
+            color: #007aff;
+            margin-bottom: 30px;
+        }
+
+        .testimonial {
+            color: #cccccc;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial span {
+            display: block;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 10px;
+            margin-bottom: 26px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1c1c1c;
+            text-align: center;
+            padding: 50px 20px;
+            color: #cccccc;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer p {
+            font-size: 1.2rem;
+        }
+
+        .footer a {
+            color: #007aff;
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Animations */
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .scroll-animation.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 992px) {
+            .features .feature-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section with Parallax -->
+    <section class="hero">
+        <div>
+            <h1 style="color: #ffffff;">Welcome to Symphonic Stories</h1>
+            <p>Discover the soundtracks that shape your life and explore music like never before.</p>
+            <div class="hero-buttons">
+                <a href="sample.html">Explore Music Library</a>
+                <a href="https://www.youtube.com/@symphonic_stories" target="_blank" style="background-color: red;">Subscribe on YouTube</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <h1>About Symphonic Stories</h1>
+        <p>
+            Symphonic Stories is your gateway to a world of music, where the soundtrack of your life comes to life. 
+            With a vast library of songs, curated playlists, and exclusive content, we offer an immersive experience that will take you deeper 
+            into the stories behind the music. Whether you are a casual listener or an audiophile, Symphonic Stories is designed to bring the music closer to you.
+        </p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2>Our Features</h2>
+        <div class="feature-item scroll-animation">
+            <i class="fas fa-headphones-alt"></i>
+            <div>
+                <h3>Personalized Playlists</h3>
+                <p>Curated playlists tailored to your mood, taste, and listening habits.</p>
+            </div>
+        </div>
+        <div class="feature-item scroll-animation">
+            <i class="fas fa-music"></i>
+            <div>
+                <h3>Vast Music Library</h3>
+                <p>Discover millions of songs from a diverse range of genres and artists.</p>
+            </div>
+        </div>
+        <div class="feature-item scroll-animation">
+            <i class="fas fa-users"></i>
+            <div>
+                <h3>Exclusive Interviews</h3>
+                <p>Get behind-the-scenes insights with artist interviews and stories.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <h2>What Our Listeners Say</h2>
+        <div class="testimonial">
+            <p>"Symphonic Stories changed the way I experience music. The curated playlists are just what I need to get through my day."</p>
+            <span>— Harshita V., Music Enthusiast</span>
+        </div>
+        <div class="testimonial">
+            <p>"The personalized playlists are spot on! Symphonic Stories really understands my music taste, and I always find new songs to add to my favorites. It’s become my go-to platform for all things music."</p>
+            <span>— Manthan S., Audiophile</span>
+        </div>
+        <div class="testimonial">
+            <p>"The interface is so easy to navigate, and the experience feels truly immersive. Symphonic Stories keeps me coming back with its rich collection of music and intuitive design."</p>
+            <span>— Yamini S., Music Lover</span>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Footer -->
+    <section class="footer">
+        <p>&copy; 2024 Symphonic Stories. All rights reserved.</p>
+    </section>
+
+    <!-- Scroll Animation Script -->
+    <script>
+        const scrollElements = document.querySelectorAll(".scroll-animation");
+
+        const elementInView = (el, dividend = 1) => {
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+            );
+        };
+
+        const displayScrollElement = (element) => {
+            element.classList.add("visible");
+        };
+
+        const hideScrollElement = (element) => {
+            element.classList.remove("visible");
+        };
+
+        const handleScrollAnimation = () => {
+            scrollElements.forEach((el) => {
+                if (elementInView(el, 1.25)) {
+                    displayScrollElement(el);
+                } else {
+                    hideScrollElement(el);
+                }
+            });
+        };
+
+        window.addEventListener("scroll", () => {
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+</html>

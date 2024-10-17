@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symphonic Stories</title>
+    <link rel="icon" href="fav.png" type="image/png">
+
+    <!-- Link to Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #1c1c1c; /* Solid dark background */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .sidebar h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Sidebar Items */
+        .sidebar ul {
+            list-style: none;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            background-color: #2c2c2c; /* Solid background */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #3c3c3c; /* Hover effect without transparency */
+            transform: translateX(10px);
+        }
+
+        /* Active State with Indicator */
+        .sidebar ul li.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: #007aff;
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Add icons to menu items */
+        .sidebar ul li i {
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .sidebar ul li span {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Enhanced View Playlist Button */
+        #view-playlist {
+            background-color: #2c2c2c; /* Solid background */
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: 1px solid #333333;
+        }
+
+        #view-playlist:hover {
+            background-color: #3c3c3c; /* Hover effect without transparency */
+            transform: translateY(-3px);
+        }
+
+        /* Custom Scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Main content */
+        .content {
+            flex-grow: 1;
+            margin-left: 260px;
+            padding-bottom: 90px;
+            background-color: #121212;
+        }
+
+        /* Album Grid */
+        .album-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr)); /* 5 columns */
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .album {
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #2c2c2c; /* Solid background */
+            padding: 10px;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .album img {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .album:hover img {
+            transform: scale(1.05);
+        }
+
+        .album .info {
+            margin-top: 10px;
+        }
+
+        .album .title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .album .artist {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+        }
+
+        /* Playbar */
+        .playbar {
+            background: #1c1c1c; /* Solid background */
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 250px;
+            right: 0;
+            border-top: 1px solid #333333;
+        }
+
+        .playbar .song-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .playbar img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .playbar .details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .playbar .details .song-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .playbar .details .song-artist {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+        }
+
+        .playbar .controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .playbar .controls button {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .playbar .controls button:hover {
+            color: #007aff;
+        }
+
+        .playbar .progress-container {
+            position: relative;
+            width: 300px;
+            height: 5px;
+            background-color: #333333;
+            cursor: pointer;
+            margin: 0 20px;
+        }
+
+        .playbar .progress {
+            background-color: #007aff;
+            height: 100%;
+            width: 0;
+        }
+
+        .playbar .time-display {
+            display: flex;
+            align-items: center;
+            color: #aaaaaa;
+            font-size: 0.8rem;
+        }
+
+        .playbar .volume-control {
+            width: 100px;
+        }
+
+        .playbar .volume-control input {
+            width: 100%;
+        }
+
+        /* Playlist section */
+        .playlist-section {
+            background: #1c1c1c; /* Solid background */
+            padding: 20px;
+            margin-top: 20px;
+            color: #ffffff;
+            border-radius: 10px;
+        }
+
+        .playlist-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #007aff;
+        }
+
+        .playlist-section ul {
+            list-style: none;
+        }
+
+        .playlist-section ul li {
+            padding: 10px;
+            background-color: #2c2c2c; /* Solid background */
+            border-radius: 10px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .playlist-section ul li button {
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            cursor: pointer;
+        }
+
+        /* Add to Playlist Button */
+        .add-to-playlist-btn {
+            background-color: #007aff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        .add-to-playlist-btn:hover {
+            background-color: #005bb5;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .add-to-playlist-btn:active {
+            background-color: #004080;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 1200px) {
+            .album-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media only screen and (max-width: 992px) {
+            .album-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 10px 0;
+                text-align: center;
+            }
+
+            .sidebar ul li {
+                display: inline-block;
+                width: auto;
+                margin-right: 15px;
+            }
+
+            .content {
+                margin-left: 0;
+                margin-top: 100px;
+            }
+
+            #view-playlist {
+                width: 100%;
+                font-size: 1.3rem;
+                padding: 10px;
+            }
+
+            .playbar {
+                left: 0;
+            }
+
+            .album-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .sidebar ul li {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .content {
+                margin-top: 120px;
+            }
+
+            .add-to-playlist-btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 1.1rem;
+            }
+
+            .album-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h1>Symphonic Stories</h1>
+        <ul>
+            <li>
+                <i class="fas fa-home"></i>
+                <a href="index.html"><span>Home</span></a>
+            </li>
+            <li class="active">
+                <i class="fas fa-music"></i>
+                <span>Library</span>
+            </li>
+            <li id="view-playlist">
+                <i class="fas fa-list"></i>
+                <span>View Playlist</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Album Grid -->
+        <div class="album-grid" id="album-grid">
+            <!-- Albums will be dynamically loaded here -->
+        </div>
+
+        <!-- Playlist Section -->
+        <div class="playlist-section" id="playlist-section" style="display: none;">
+            <h2>Your Playlist</h2>
+            <ul id="playlist">
+                <!-- Playlist items will be dynamically added here -->
+            </ul>
+        </div>
+
+        <!-- Playbar -->
+        <div class="playbar">
+            <div class="song-info">
+                <img src="applemusic.png" id="album-art">
+                <div class="details">
+                    <div class="song-title" id="song-title">Song Title</div>
+                    <div class="song-artist" id="song-artist">Artist Name</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="shuffle-btn" aria-label="shuffle">&#128257;</button>
+                <button id="prev-btn">&#9664;</button>
+                <button id="play-btn">&#9658;</button>
+                <button id="pause-btn" style="display:none;">&#9208;</button>
+                <button id="next-btn">&#9654;</button>
+                <button id="repeat-btn" aria-label="repeat">&#128260;</button>
+            </div>
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <div class="progress-container" id="progress-container">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span id="total-duration">0:00</span>
+            </div>
+            <div class="volume-control">
+                <input type="range" id="volume-slider" min="0" max="1" step="0.1">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Font Awesome icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Your JavaScript code remains the same -->
+    <!-- ... (existing JavaScript code) ... -->
+    <script>
+        // Sample Album Data with Placeholder Audio File
+        const albums = [
+            { title: "3:59 AM", artist: "Divine", image: "359am.jpg", audio: "divine.mp3" },
+            { title: "Ajab Si", artist: "KK", image: "ajabsi.jpg", audio: "ajab si.mp3" },
+            { title: "Alag Aasman", artist: "Anuv Jain", image: "alagaasman.jpg", audio: "alag aasman slowed audition.mp3" },
+            { title: "Apna bana le", artist: "Arijit Singh", image: "apnabanale.jpeg", audio: "Apna Bna Le Slowed(1).mp3" },
+            { title: "Darasal", artist: "Atif Aslam", image: "darasal.jpg", audio: "darasal.mp3" },
+            { title: "Haule Haule", artist: "Sukhwinder Singh", image: "haule haule.jpg", audio: "haule haule.mp3" },
+            { title: "Hawayein", artist: "Arijit Singh", image: "hawayein.jpg", audio: "hawayein.mp3" },
+            { title: "Hookah Bar", artist: "Himesh Reshammiya", image: "hookahbar.jpeg", audio: "hookah bar.mp3" },
+            { title: "Ishq Mubarak", artist: "Arijit Singh", image: "ishqmubarak.jpg", audio: "ishq mubarak.mp3" },
+            { title: "Jaadu Teri Nazar", artist: "Udit Narayan", image: "jaaduterinazar.jpeg", audio: "jadu teri nazar.mp3" },
+            { title: "Jashn E Bahara", artist: "Javed Ali", image: "jashnebahara.jpg", audio: "Jashn E Bahara.mp3" },
+            { title: "Kashmir Main, Tu Kanyakumari", artist: "Arijit Singh", image: "kashmirtumaik.jpg", audio: "Kashmir Main, Tu Kanyakumari.mp3" },
+            { title: "Kuch Toh Bata Zindagi", artist: "Jubin Nautiyal", image: "kuchtohbata.jpg", audio: "Kuch Toh Bata Zindagi.mp3" },
+            { title: "Mai Agar Kahoon", artist: "Sonu nigam", image: "ajabsi.jpg", audio: "mai agar kahoon.mp3" },
+            { title: "Mai Koi Aisa geet gaun", artist: " Abhijeet Bhattacharya", image: "maikoiaisageet.jpg", audio: "mai koi aisa geet gaun slowed.mp3" },
+            { title: "Maiyya Mainnu", artist: "Sachet Tandon", image: "maiyya.jpg", audio: "Maiyya Mainnu.mp3" },
+            { title: "Malang Sajna", artist: "Sachet Tandon", image: "malangsajna.jpg", audio: "malang sajna.mp3" },
+            { title: "Mann Mera", artist: "Gajendra Verma", image: "mannmera.jpg", audio: "mann mera.mp3" },
+            { title: "Manwa Lage", artist: "Shreya Ghoshal", image: "manwalage.jpg", audio: "manwa lage.mp3" },
+            { title: "Mere Ghar Ram Aaye Hai", artist: "Jubin Nautiyal", image: "meregharram.jpeg", audio: "Mere Ghar Ram Aaye Hai Slowed.mp3" },
+            { title: "Mi Amor", artist: "Sharn", image: "miamor.jpeg", audio: "Mi Amor.mp3" },
+            { title: "Namo Namo", artist: "Amit Trivedi", image: "namonamo.jpg", audio: "Namo Namo Slowed.mp3" },
+            { title: "Pee Loon", artist: "Mohit Chauhan", image: "peeloon.jpeg", audio: "Pee Loon.mp3" },
+            { title: "Pehli Dafa", artist: "Atif Aslam", image: "pehlidafa.jpg", audio: "Pehli dafa.mp3" },
+            { title: "Pehli Nazar Mein", artist: "Atif Aslam", image: "pehlinazar.jpeg", audio: "pehli nazar mein.mp3" },
+            { title: "Perfect", artist: "Ed Sheeran", image: "perfect.jpg", audio: "perfect slowed and reverb.mp3" },
+            { title: "Phir aur kya chaiye", artist: "Arijit Singh", image: "phiraurkyachaiye.jpg", audio: "Phir Aur Kya Chahiye_01.mp3" },
+            { title: "Phir Milenge Chalte Chalte", artist: "Sonu Nigam", image: "phirmilenge.jpeg", audio: "Phir Milenge Chalte Chalte_192(Ghantalele.com)_01.mp3" },
+            { title: "Raanjhana", artist: "Arijit Singh", image: "raanjhana.jpg", audio: "Raanjhana.mp3" },
+            { title: "Rait Zara Si", artist: "Arijit Singh", image: "raitzarasi.jpg", audio: "Rait Zara Si.mp3" },
+            { title: "Rang Lageya", artist: "Mohit Chauhan", image: "ranglageya.jpg", audio: "Rang Lageya.mp3" },
+            { title: "Saiyyan", artist: "Kailash Kher", image: "saiyyan.jpg", audio: "Saiyyan.mp3" },
+            { title: "Saware", artist: "Arijit Singh", image: "saware.jpg", audio: "saware.mp3" },
+            { title: "Shape of you", artist: "Ed Sheeran", image: "shapeofyou.jpg", audio: "shape of you slowed .mp3" },
+            { title: "Shubhaarambh", artist: "Shruti Pathak", image: "shubhaarambh.jpeg", audio: "shubhaarambh.mp3" },
+            { title: "Sun saathiya", artist: "Priya Saraiya", image: "sunsaathiya.jpeg", audio: "sun saathiya.mp3" },
+            { title: "Tera hone laga hoon", artist: "Atif Aslam", image: "terahonelaga.jpeg", audio: "tera hone laga hu.mp3" },
+            { title: "Tera Hua", artist: "Arijit Singh", image: "terahua.jpeg", audio: "tera hua.mp3" },
+            { title: "Tere Hawale", artist: "Pritam", image: "terehawale.jpg", audio: "Tere Hawale.mp3" },
+            { title: "Tum se", artist: "Arijit Singh", image: "tumse.jpg", audio: "tum se slowed down.mp3" },
+            { title: "Tum se hi", artist: "Mohit Chauhan", image: "tumsehi.jpg", audio: "Tum se Hi.mp3" },
+            { title: "Tum Tak", artist: "Mohit Chauhan", image: "raanjhana.jpg", audio: "tum tak.mp3" },
+            { title: "Tumhe jo maine dekha", artist: "Sonu Nigam", image: "tumhejomaine.jpg", audio: "tumhe jo maine dekha.mp3" },
+            { title: "Yeh Tune kya kiya", artist: "Mohit Chauhan", image: "yehtunekyakiya.jpg", audio: "ye tune kya kiya.mp3" },
+            { title: "Yeh Fitoor Mera", artist: "Arijit Singh", image: "yehfitoormera.jpg", audio: "yeh fitoor mera.mp3" }
+        ];
+
+        const albumGrid = document.getElementById('album-grid');
+        const playButton = document.getElementById('play-btn');
+        const pauseButton = document.getElementById('pause-btn');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalDurationEl = document.getElementById('total-duration');
+        const volumeSlider = document.getElementById('volume-slider');
+        const playlistSection = document.getElementById('playlist-section');
+        const playlistUl = document.getElementById('playlist');
+        let currentAudio = null;
+        let currentSongIndex = 0;
+        let playlist = JSON.parse(localStorage.getItem('playlist')) || [];
+
+        // Load albums dynamically
+        albums.forEach((album, index) => {
+            const albumDiv = document.createElement('div');
+            albumDiv.classList.add('album');
+            albumDiv.innerHTML = `
+                <img src="${album.image}" alt="${album.title}">
+                <div class="info">
+                    <div class="title">${album.title}</div>
+                    <div class="artist">${album.artist}</div>
+                </div>
+                <button class="add-to-playlist-btn">Add to Playlist</button>
+            `;
+            albumDiv.querySelector('.add-to-playlist-btn').addEventListener('click', () => addToPlaylist(album));
+            albumDiv.addEventListener('click', () => playAlbum(index));
+            albumGrid.appendChild(albumDiv);
+        });
+
+        // Play an album
+        function playAlbum(index) {
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+            currentSongIndex = index;
+            const album = albums[index];
+            currentAudio = new Audio(album.audio);
+            document.getElementById('album-art').src = album.image;
+            document.getElementById('song-title').textContent = album.title;
+            document.getElementById('song-artist').textContent = album.artist;
+            currentAudio.play();
+            playButton.style.display = 'none';
+            pauseButton.style.display = 'inline';
+            updateProgress();
+            updateDuration();
+        }
+
+        // Play/Pause functionality
+        playButton.addEventListener('click', () => {
+            currentAudio.play();
+            playButton.style.display = 'none';
+            pauseButton.style.display = 'inline';
+        });
+
+        pauseButton.addEventListener('click', () => {
+            currentAudio.pause();
+            playButton.style.display = 'inline';
+            pauseButton.style.display = 'none';
+        });
+
+        // Update progress bar and time display
+        function updateProgress() {
+            currentAudio.ontimeupdate = () => {
+                const progressPercentage = (currentAudio.currentTime / currentAudio.duration) * 100;
+                progress.style.width = `${progressPercentage}%`;
+
+                // Update current time
+                const currentMinutes = Math.floor(currentAudio.currentTime / 60);
+                const currentSeconds = Math.floor(currentAudio.currentTime % 60);
+                currentTimeEl.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}`;
+            };
+        }
+
+        // Update total duration
+        function updateDuration() {
+            currentAudio.onloadedmetadata = () => {
+                const totalMinutes = Math.floor(currentAudio.duration / 60);
+                const totalSeconds = Math.floor(currentAudio.duration % 60);
+                totalDurationEl.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
+            };
+        }
+
+        // Click on progress bar to change song position
+        document.getElementById('progress-container').addEventListener('click', (e) => {
+            const width = e.currentTarget.clientWidth;
+            const clickX = e.offsetX;
+            const duration = currentAudio.duration;
+            currentAudio.currentTime = (clickX / width) * duration;
+        });
+
+        // Add to Playlist functionality
+        function addToPlaylist(album) {
+            playlist.push(album);
+            updatePlaylist();
+            savePlaylistToLocalStorage();
+        }
+
+        // Update the playlist UI
+        function updatePlaylist() {
+            playlistUl.innerHTML = '';
+            playlist.forEach((album, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${album.title} - ${album.artist} <button onclick="removeFromPlaylist(${index})">Remove</button>`;
+                playlistUl.appendChild(li);
+            });
+        }
+
+        // Save playlist to localStorage
+        function savePlaylistToLocalStorage() {
+            localStorage.setItem('playlist', JSON.stringify(playlist));
+        }
+
+        // Remove from Playlist
+        function removeFromPlaylist(index) {
+            playlist.splice(index, 1);
+            updatePlaylist();
+            savePlaylistToLocalStorage();
+        }
+
+        // Show playlist section when clicking "View Playlist"
+        document.getElementById('view-playlist').addEventListener('click', () => {
+            playlistSection.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
